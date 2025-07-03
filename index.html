@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TapCloud x LINE</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: linear-gradient(to bottom, #b3ecff, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+    #cloud {
+      width: 150px;
+      cursor: pointer;
+      margin-top: 50px;
+    }
+    #coin {
+      font-size: 32px;
+      margin-top: 20px;
+    }
+    #username {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h1>☁️ TapCloud</h1>
+  <div id="username">Loading...</div>
+  <img id="cloud" src="https://i.ibb.co/fnknn5S/cloud.png" alt="cloud" />
+  <div id="coin">💰 0 TCL</div>
+
+  <script>
+    let coin = 0;
+
+    async function startLIFF() {
+      await liff.init({ liffId: "YOUR_LIFF_ID" }); // Ganti dengan LIFF ID kamu
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+
+      const profile = await liff.getProfile();
+      document.getElementById("username").innerText = "👋 " + profile.displayName;
+
+      // Kamu bisa POST data ini ke server
+      const user = {
+        lineId: profile.userId,
+        name: profile.displayName,
+        avatar: profile.pictureUrl
+      };
+      console.log("LINE user", user);
+
+      // Simpan user ke database kamu (opsional)
+      // await fetch("/api/save-user", { method: "POST", body: JSON.stringify(user) });
+    }
+
+    document.getElementById("cloud").addEventListener("click", () => {
+      coin += 1;
+      document.getElementById("coin").innerText = `💰 ${coin} TCL`;
+    });
+
+    startLIFF();
+  </script>
+</body>
+</html>
